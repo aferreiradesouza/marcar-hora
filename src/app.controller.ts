@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { MarcarHoraDto } from './dto/marcarHora.dto';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { config } from './config/config';
+import { SheetHeaders } from './config/config';
+import { DateService } from './date.service';
 
 @Controller('MarcarHora')
 @ApiTags('Marcar Hora')
@@ -13,20 +13,18 @@ export class AppController {
   @Post()
   @ApiOperation({ summary: 'Marcar hora' })
   marcarHora(@Body() body: MarcarHoraDto): Promise<string> {
-    const getDoc = async () => {
-      const doc = new GoogleSpreadsheet(config.id);
-
-      await doc.useServiceAccountAuth({
-        client_email: config.client_email,
-        private_key: config.private_key.replace(/\\n/g, '\n')
-      })
-      await doc.loadInfo();
-      return doc;
-    }
-    return getDoc().then(doc => {
-      console.log(doc);
-      return this.appService.marcarHora(body);
+    return this.appService.getSheet().then(async doc => {
+      const name = `${DateService.format(body.dateTime, 'YYYY-MM-DD', 'MMM.YY')}`;
+      const index = this.appService.getSheetByName(doc, name);
+      let sheet = doc.sheetsByIndex[index];
+      if (index === null) {
+        sheet = await this.appService.createNewSheet(doc, name);
+      }
+      await sheet.setHeaderRow([SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida, SheetHeaders.HorasTrabalhadas, '', SheetHeaders.Total]);
+      await this.appService.adicionarHora(sheet, body);
+      return 'foi';
     }).catch(err => {
+      console.log(err);
       return JSON.stringify(err);
     });
   }
