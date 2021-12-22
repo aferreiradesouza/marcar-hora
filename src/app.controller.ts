@@ -12,7 +12,7 @@ export class AppController {
 
   @Post()
   @ApiOperation({ summary: 'Marcar hora' })
-  marcarHora(@Body() body: MarcarHoraDto): Promise<string> {
+  marcarHora(@Body() body: MarcarHoraDto): Promise<any> {
     return this.appService.getSheet().then(async doc => {
       const name = `${DateService.format(body.dateTime, 'YYYY-MM-DD', 'MMM.YY')}`;
       const index = this.appService.getSheetByName(doc, name);
@@ -23,7 +23,7 @@ export class AppController {
       }
       await sheet.setHeaderRow([SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida, SheetHeaders.HorasTrabalhadas, '', SheetHeaders.Total]);
       await this.appService.adicionarHora(sheet, body);
-      return 'foi';
+      return {sucesso: true};
     }).catch(err => {
       console.log(err);
       return JSON.stringify(err);
