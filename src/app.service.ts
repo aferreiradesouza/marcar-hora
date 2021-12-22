@@ -28,7 +28,7 @@ export class AppService {
     return doc.sheetsByIndex[doc.sheetCount - 1];
   }
 
-  async obterLinhaInsert(body: MarcarHoraDto, lastRow: any, rows): Promise<{ novaLinha: boolean, index: number }> {
+  obterLinhaInsert(body: MarcarHoraDto, lastRow: any, rows): { novaLinha: boolean, index: number } {
     const dateTime = DateService.parse(body.dateTime, 'YYYY-MM-DD');
     const dataLastRow = DateService.parse(lastRow[SheetHeaders.Data]);
     return {
@@ -73,13 +73,14 @@ export class AppService {
   async adicionarHora(sheet, body: MarcarHoraDto): Promise<void> {
     const rows = await sheet.getRows();
     const lastRow = this.getLastRow(rows);
-    const rowInsert = await this.obterLinhaInsert(body, lastRow, rows);
+    const rowInsert = this.obterLinhaInsert(body, lastRow, rows);
     const hourParsed = DateService.format(body.dateTime, 'YYYY-MM-DDTHH:mm:ss', 'HH:mm');
     const dateParsed = DateService.format(body.dateTime, 'YYYY-MM-DD', 'DD/MM/YYYY');
     if (rowInsert.novaLinha) {
-      sheet.addRow({
+      await sheet.addRow({
         [SheetHeaders.Data]: dateParsed,
         [SheetHeaders.Entrada]: hourParsed})
+      // await sheet.saveUpdatedCells();
     } else {
       this.setInHeader(hourParsed, rows[rowInsert.index], rowInsert.index)
       await rows[rowInsert.index].save();
@@ -96,5 +97,13 @@ export class AppService {
     });
     const sheetsSelected = allsheets.find(e => name === e.title);
     return sheetsSelected?.index ?? null;
+  }
+
+  async delay(time = 2000): Promise<void> {
+    await new Promise<void>(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, time);
+    })
   }
 }
