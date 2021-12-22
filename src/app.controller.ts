@@ -19,7 +19,6 @@ export class AppController {
       let sheet = doc.sheetsByIndex[index];
       if (index === null) {
         sheet = await this.appService.createNewSheet(doc, name);
-        await this.appService.delay(1000);
       }
       await sheet.setHeaderRow([SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida, SheetHeaders.HorasTrabalhadas, '', SheetHeaders.Total]);
       await this.appService.adicionarHora(sheet, body);

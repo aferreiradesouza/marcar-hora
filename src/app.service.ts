@@ -43,11 +43,11 @@ export class AppService {
       if (!row[item]) {
         row[item] = hour;
         if (item !== SheetHeaders.Saida) {
+          if (item === SheetHeaders.HorasTrabalhadas) {
+            row[item] = `=(C${index + 2} - B${index + 2}) + (E${index + 2} - D${index + 2})`
+          }
           break;
         }
-      }
-      if (item === SheetHeaders.HorasTrabalhadas) {
-        row[item] = `=(C${index + 2} - B${index + 2}) + (E${index + 2} - D${index + 2})`
       }
     }
   }
@@ -80,7 +80,6 @@ export class AppService {
       await sheet.addRow({
         [SheetHeaders.Data]: dateParsed,
         [SheetHeaders.Entrada]: hourParsed})
-      // await sheet.saveUpdatedCells();
     } else {
       this.setInHeader(hourParsed, rows[rowInsert.index], rowInsert.index)
       await rows[rowInsert.index].save();
