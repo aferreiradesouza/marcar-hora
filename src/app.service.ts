@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MarcarHoraDto } from './dto/marcarHora.dto';
+import { MarcarHoraDto, ObterHoraDto } from './dto/marcarHora.dto';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { config, SheetHeaders } from './config/config';
 import { DateService } from './date.service';
@@ -28,7 +28,7 @@ export class AppService {
     return doc.sheetsByIndex[doc.sheetCount - 1];
   }
 
-  obterLinhaInsert(body: MarcarHoraDto, lastRow: any, rows): { novaLinha: boolean, index: number } {
+  obterLinhaInsert(body: MarcarHoraDto | ObterHoraDto, lastRow: any, rows): { novaLinha: boolean, index: number } {
     const dateTime = DateService.parse(body.dateTime, 'YYYY-MM-DD');
     const dataLastRow = DateService.parse(lastRow[SheetHeaders.Data]);
     return {

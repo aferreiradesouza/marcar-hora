@@ -1,16 +1,16 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { MarcarHoraDto } from './dto/marcarHora.dto';
+import { MarcarHoraDto, ObterHoraDto } from './dto/marcarHora.dto';
 import { SheetHeaders } from './config/config';
 import { DateService } from './date.service';
 
-@Controller('MarcarHora')
+@Controller('')
 @ApiTags('Marcar Hora')
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  @Post()
+  @Post('/marcarHora')
   @ApiOperation({ summary: 'Marcar hora' })
   marcarHora(@Body() body: MarcarHoraDto): Promise<any> {
     return this.appService.getSheet().then(async doc => {
@@ -25,6 +25,34 @@ export class AppController {
       return {sucesso: true};
     }).catch(err => {
       console.log(err);
+      return JSON.stringify(err);
+    });
+  }
+
+  @Get('/obterUltimaHoraMarcada')
+  @ApiOperation({ summary: 'Obter última hora marcada' })
+  obterUltimaHoraMarcada(@Query() body: ObterHoraDto): Promise<any> {
+    return this.appService.getSheet().then(async doc => {
+      const lastSheet = doc.sheetsByIndex[doc.sheetsByIndex.length - 1];
+      const rows = await lastSheet.getRows();
+      const lastRow = this.appService.getLastRow(rows);
+      const linha = this.appService.obterLinhaInsert(body, lastRow, rows);
+      if (linha.novaLinha) {
+        return { mensagem: 'Nenhuma marcação no dia' }
+      } else {
+        let horaMarcada = '';
+        const row = rows[linha.index];
+        const headers = [SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida]
+        for (const hora of headers) {
+          if (row[hora]) {
+            horaMarcada = row[hora];
+          } else {
+            break;
+          }
+        }
+        return { mensagem: horaMarcada }
+      }
+    }).catch(err => {
       return JSON.stringify(err);
     });
   }
