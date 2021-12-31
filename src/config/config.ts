@@ -11,5 +11,7 @@ export enum SheetHeaders {
     VoltaAlmoco = 'Volta Almoço',
     Saida = 'Saída',
     HorasTrabalhadas = 'Horas trabalhadas',
+    Meta = 'Meta',
+    Valor = 'Valor',
     Total = 'Total'
 }

@@ -38,16 +38,19 @@ export class AppService {
   }
 
   async setInHeader(hour: string, row: any, index: number): Promise<void> {
-    const headers = [SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida, SheetHeaders.HorasTrabalhadas]
+    const headers = [SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida]
     for (const item of headers) {
       if (!row[item]) {
         row[item] = hour;
-        if (item !== SheetHeaders.Saida) {
-          if (item === SheetHeaders.HorasTrabalhadas) {
-            row[item] = `=(C${index + 2} - B${index + 2}) + (E${index + 2} - D${index + 2})`
+        if (item === SheetHeaders.Saida) {
+          row[SheetHeaders.HorasTrabalhadas] = `=(C${index + 2} - B${index + 2}) + (E${index + 2} - D${index + 2})`
+          row[SheetHeaders.Meta] = '08:00:00';
+          row[SheetHeaders.Valor] = `=(VALOR.TEMPO(F${index + 2}) * 24) * 101`;
+          if (index === 0) {
+            row[SheetHeaders.Total] = '=SOMA(F2:F40)'
           }
-          break;
         }
+        break;
       }
     }
   }
@@ -64,22 +67,21 @@ export class AppService {
     for (let index = array.length - 1; index >= 0; index--) {
       await rows[index].delete();
     }
-    const totalCell = sheet.getCellByA1('H2');
-    totalCell.formula = '=SOMA(F2:F40)';
-    await sheet.saveUpdatedCells();
     return sheet;
   }
 
   async adicionarHora(sheet, body: MarcarHoraDto): Promise<void> {
     const rows = await sheet.getRows();
     const lastRow = this.getLastRow(rows);
-    const rowInsert = this.obterLinhaInsert(body, lastRow, rows);
+    const rowInsert = lastRow ? this.obterLinhaInsert(body, lastRow, rows) : { index: 0, novaLinha: true };
     const hourParsed = DateService.format(body.dateTime, 'YYYY-MM-DDTHH:mm:ss', 'HH:mm');
     const dateParsed = DateService.format(body.dateTime, 'YYYY-MM-DD', 'DD/MM/YYYY');
     if (rowInsert.novaLinha) {
-      await sheet.addRow({
+      const row = {
         [SheetHeaders.Data]: dateParsed,
-        [SheetHeaders.Entrada]: hourParsed})
+        [SheetHeaders.Entrada]: hourParsed
+      }
+      await sheet.addRow(row);
     } else {
       this.setInHeader(hourParsed, rows[rowInsert.index], rowInsert.index)
       await rows[rowInsert.index].save();
