@@ -38,19 +38,20 @@ export class AppController {
       const lastRow = this.appService.getLastRow(rows);
       const linha = this.appService.obterLinhaInsert(body, lastRow, rows);
       if (linha.novaLinha) {
-        return { mensagem: 'Nenhuma marcação no dia' }
-      } else {
-        let horaMarcada = '';
-        const row = rows[linha.index];
-        const headers = [SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida]
-        for (const hora of headers) {
-          if (row[hora]) {
-            horaMarcada = row[hora];
-          } else {
-            break;
-          }
+        return { 
+          entrada:'-',
+          saidaAlmoco:'-',
+          voltaAlmoco:'-',
+          saida:'-'
         }
-        return { mensagem: horaMarcada }
+      } else {
+        const row = rows[linha.index];
+        return { 
+          entrada: row[SheetHeaders.Entrada] || '-',
+          saidaAlmoco: row[SheetHeaders.SaidaAlmoco] || '-',
+          voltaAlmoco: row[SheetHeaders.VoltaAlmoco] || '-',
+          saida: row[SheetHeaders.Saida] || '-'
+        }
       }
     }).catch(err => {
       return JSON.stringify(err);
