@@ -13,5 +13,9 @@ export enum SheetHeaders {
     HorasTrabalhadas = 'Horas trabalhadas',
     Meta = 'Meta',
     Valor = 'Valor',
-    Total = 'Total'
+    SaidaComGordura = 'Saída c/ gordura',
+    HorasTrabalhadasComGordura = 'Horas trabalhadas c/ gordura',
+    Total = 'Total',
+    TotalComGordura = 'Total c/ gordura',
+    Gordura = 'Gordura'
 }

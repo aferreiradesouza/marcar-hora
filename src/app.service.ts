@@ -46,8 +46,12 @@ export class AppService {
           row[SheetHeaders.HorasTrabalhadas] = `=(C${index + 2} - B${index + 2}) + (E${index + 2} - D${index + 2})`
           row[SheetHeaders.Meta] = '08:00:00';
           row[SheetHeaders.Valor] = `=(VALOR.TEMPO(F${index + 2}) * 24) * 101`;
+          row[SheetHeaders.SaidaComGordura] = `=(K2 * (M2 / 100)) / CONT.VALORES(A2:A) + E${index + 2}`;
+          row[SheetHeaders.HorasTrabalhadasComGordura] = `=(C${index + 2} - B${index + 2}) + (I${index + 2} - D${index + 2})`;
           if (index === 0) {
-            row[SheetHeaders.Total] = '=SOMA(F2:F40)'
+            row[SheetHeaders.Total] = '=SOMA(F2:F)';
+            row[SheetHeaders.TotalComGordura] = '=SOMA(J2:J)';
+            row[SheetHeaders.Gordura] = '20';
           }
         }
         break;
