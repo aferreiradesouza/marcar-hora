@@ -46,7 +46,7 @@ export class AppService {
           row[SheetHeaders.HorasTrabalhadas] = `=(C${index + 2} - B${index + 2}) + (E${index + 2} - D${index + 2})`
           row[SheetHeaders.Meta] = '08:00:00';
           row[SheetHeaders.Valor] = `=(VALOR.TEMPO(F${index + 2}) * 24) * 101`;
-          row[SheetHeaders.SaidaComGordura] = `=(K2 * (M2 / 100)) / CONT.VALORES(A2:A) + E${index + 2}`;
+          row[SheetHeaders.SaidaComGordura] = `=(L2 * (N2 / 100)) / CONT.VALORES(A2:A) + E${index + 2}`;
           row[SheetHeaders.HorasTrabalhadasComGordura] = `=(C${index + 2} - B${index + 2}) + (I${index + 2} - D${index + 2})`;
           row[SheetHeaders.ValorComGordura] = `=(VALOR.TEMPO(J${index + 2}) * 24) * 101`;
           if (index === 0) {
