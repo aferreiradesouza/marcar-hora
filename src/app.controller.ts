@@ -20,7 +20,24 @@ export class AppController {
       if (index === null) {
         sheet = await this.appService.createNewSheet(doc, name);
       }
-      await sheet.setHeaderRow([SheetHeaders.Data, SheetHeaders.Entrada, SheetHeaders.SaidaAlmoco, SheetHeaders.VoltaAlmoco, SheetHeaders.Saida, SheetHeaders.HorasTrabalhadas, SheetHeaders.Meta, SheetHeaders.Valor,SheetHeaders.SaidaComGordura, SheetHeaders.HorasTrabalhadasComGordura, SheetHeaders.Total, SheetHeaders.TotalComGordura, SheetHeaders.Gordura]);
+      await sheet.setHeaderRow([
+        SheetHeaders.Data,
+        SheetHeaders.Entrada,
+        SheetHeaders.SaidaAlmoco,
+        SheetHeaders.VoltaAlmoco,
+        SheetHeaders.Saida,
+        SheetHeaders.HorasTrabalhadas,
+        SheetHeaders.Meta,
+        SheetHeaders.Valor,
+        SheetHeaders.SaidaComGordura,
+        SheetHeaders.HorasTrabalhadasComGordura,
+        SheetHeaders.ValorComGordura,
+        SheetHeaders.Total,
+        SheetHeaders.TotalComGordura,
+        SheetHeaders.Gordura,
+        SheetHeaders.ValoresTotais,
+        SheetHeaders.ValoresTotaisComGordura
+      ]);
       await this.appService.adicionarHora(sheet, body);
       return {sucesso: true};
     }).catch(err => {
