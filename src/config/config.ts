@@ -15,13 +15,13 @@ export enum SheetHeaders {
     Valor = 'Valor',
     SaidaComGordura = 'Saída c/ gordura',
     HorasTrabalhadasComGordura = `Horas trabalhadas
-    c/ gordura`,
+c/ gordura`,
     ValorComGordura = `Valor
-    c/ gordura`,
+c/ gordura`,
     Total = 'Total',
     TotalComGordura = 'Total c/ gordura',
     Gordura = 'Gordura',
     ValoresTotais = 'Valores totais',
     ValoresTotaisComGordura = `Valores totais
-    c/ gordura`
+c/ gordura`
 }
