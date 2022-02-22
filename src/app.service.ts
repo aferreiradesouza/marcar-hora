@@ -21,7 +21,7 @@ export class AppService {
   }
 
   getLastRow(rows): any {
-    return rows[rows.length - 1];
+    return rows[rows.length - 2];
   }
 
   getLastSheet(doc): any {
@@ -31,8 +31,10 @@ export class AppService {
   obterLinhaInsert(body: MarcarHoraDto | ObterHoraDto, lastRow: any, rows): { novaLinha: boolean, index: number } {
     const dateTime = DateService.parse(body.dateTime, 'YYYY-MM-DD');
     const dataLastRow = DateService.parse(lastRow[SheetHeaders.Data]);
+    console.log(dateTime,
+      dataLastRow, !dataLastRow.isSame(dateTime, 'day'));
     return {
-      index: dataLastRow.isSame(dateTime, 'day') ? rows.length - 1 : rows.length,
+      index: dataLastRow.isSame(dateTime, 'day') ? rows.length - 2 : rows.length,
       novaLinha: !dataLastRow.isSame(dateTime, 'day')
     }
   }

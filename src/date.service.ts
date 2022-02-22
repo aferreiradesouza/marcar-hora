@@ -53,8 +53,8 @@ export class DateService {
     /**
         * Entrega uma data no formato YYYY-MM-DD
     */
-    static date(): string {
-        return dayjs().format('YYYY-MM-DD');
+    static date(format = 'YYYY-MM-DD'): string {
+        return dayjs().format(format);
     }
 
     /**

@@ -74,4 +74,15 @@ export class AppController {
       return JSON.stringify(err);
     });
   }
+
+  @Get('/obterPlanilha')
+  @ApiOperation({ summary: 'Obter Planilha' })
+  getPlanilha(): Promise<any> {
+    return this.appService.getSheet().then(async doc => {
+      const name = `${DateService.date('MMM.YY')}`;
+      const index = this.appService.getSheetByName(doc, name);
+      const sheet = doc.sheetsByIndex[index];
+      return {id: sheet.sheetId};
+    })
+  }
 }
