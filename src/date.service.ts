@@ -54,6 +54,7 @@ export class DateService {
         * Entrega uma data no formato YYYY-MM-DD
     */
     static date(format = 'YYYY-MM-DD'): string {
+        dayjs.locale(pt);
         return dayjs().format(format);
     }
 

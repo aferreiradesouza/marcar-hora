@@ -106,7 +106,7 @@ export class AppService {
       }
     });
     const sheetsSelected = allsheets.find(e => name === e.title);
-    return sheetsSelected?.index ?? null;
+    return sheetsSelected?.index ?? 0;
   }
 
   async delay(time = 2000): Promise<void> {
